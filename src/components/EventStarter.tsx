@@ -10,7 +10,7 @@ import eventsData from '../data/eventsData.json';
 
 interface Team {
   name: string;
-  logo: string;
+  logo_N: string;
 }
 
 interface Event {
@@ -28,6 +28,17 @@ interface TooltipItem {
   image: string;
 }
 
+const logoMap: Record<string, string> = {
+  "IITD": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTTo20oIqN1F0SehZMIXX0_gKr-IKmovopPw&s",
+  "IITBom": "https://upload.wikimedia.org/wikipedia/en/thumb/1/1d/Indian_Institute_of_Technology_Bombay_Logo.svg/1200px-Indian_Institute_of_Technology_Bombay_Logo.svg.png",
+  "IITK": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwbbMz-P0ZeAxxp-NZKorARVzE-aniCQd2dQ&s",
+  "IITH": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd9IM5rR9qUMSMX1TUczNSy2NbrYbR0RnwqQ&s",
+  "IITG": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf_7zkjeK2ZNeEiC5QXaPmvwqOzC06XsJB1w&s",
+  "IITR": "https://iitr.ac.in/Departments/Metallurgical%20and%20Materials%20Engineering%20Department/assets/08c159cb811c2742199fed6b07c10860a7b8e777515377e20fe0f2d90f230657_iitr_logo.jpg",
+  "IITMadras": "https://doe.iitm.ac.in/wp-content/uploads/2021/06/245-2451831_iit-madras-logo.png",
+  "IITKGP": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhSouaXdQx6ONcJ9B0FFqXjRNGG29geLIekw&s",
+};
+
 export function TypewriterEffectSmoothDemo() {
   const [selectedSport, setSelectedSport] = useState("Football");
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -37,7 +48,10 @@ export function TypewriterEffectSmoothDemo() {
     const events = (eventsData as { events: Event[] }).events
       .filter((event) => event.sport === selectedSport)
       .filter((event) => {
-        return selectedDate ? new Date(event.time).toDateString() === new Date(selectedDate).toDateString() : true;
+        return selectedDate
+          ? new Date(event.time).toDateString() ===
+              new Date(selectedDate).toDateString()
+          : true;
       });
     setFilteredEvents(events);
   }, [selectedSport, selectedDate]);
@@ -46,13 +60,12 @@ export function TypewriterEffectSmoothDemo() {
     setSelectedDate(e.target.value);
   };
 
-  // Prepare tooltip items
   const getTooltipItems = (teams: Team[]): TooltipItem[] => {
     return teams.map((team, index) => ({
-      id: index, // Ensure this is a number
+      id: index,
       name: team.name,
-      designation: "", // Assuming no designation needed
-      image: team.logo,
+      designation: "",
+      image: logoMap[team.logo_N],
     }));
   };
 
@@ -60,14 +73,15 @@ export function TypewriterEffectSmoothDemo() {
     <>
       <div className="flex flex-col items-center justify-center h-[40rem] p-8 rounded-xl text-white">
         <p className="text-neutral-400 text-xs sm:text-base mb-6 text-center">
-          Discover the magic of innovation with our <strong>exciting events</strong> listed below
+          Discover the magic of innovation with our{" "}
+          <strong>exciting events</strong> listed below
         </p>
         <TypewriterEffectSmooth
           words={[
             { text: "Welcome" },
             { text: "To" },
             { text: "IITBHU" },
-            { text: "SPARDHA 2024", className: "text-yellow-400" },
+            { text: "SPARDHA 2024", className: "bg-blue-500" },
           ]}
           className="mb-6"
         />
@@ -97,19 +111,25 @@ export function TypewriterEffectSmoothDemo() {
       <TracingBeam className="w-full px-6">
         <div className="max-w-2xl mx-auto antialiased pt-4 relative w-full">
           {filteredEvents.length === 0 ? (
-            <p className="text-center text-white">No events available for this sport.</p>
+            <p className="text-center text-white">
+              No events available for this sport.
+            </p>
           ) : (
             filteredEvents.map((event, index) => (
               <CardSpotlight
                 key={`event-${index}`}
                 className="mb-10 bg-gray-900 border border-yellow-400 rounded-lg shadow-lg p-6 transform transition-transform hover:scale-105"
-                style={{ borderColor: 'rgba(255, 205, 0, 0.8)' }}
+                style={{ borderColor: "rgba(255, 205, 0, 0.8)" }}
               >
                 <h2 className="bg-yellow-500 text-black rounded-full text-xs sm:text-sm w-fit px-4 py-1 mb-4">
                   {event.sport}
                 </h2>
 
-                <p className={twMerge("text-2xl mb-4 text-yellow-300 font-semibold")}>
+                <p
+                  className={twMerge(
+                    "text-2xl mb-4 text-yellow-300 font-semibold"
+                  )}
+                >
                   {event.event}
                 </p>
 
@@ -119,20 +139,16 @@ export function TypewriterEffectSmoothDemo() {
                       <AnimatedTooltip
                         key={i}
                         items={getTooltipItems([team])}
-                      >
-                        <div className="relative flex items-center mx-2">
-                          <img
-                            src={team.logo}
-                            alt={team.name}
-                            className="w-8 h-8 rounded-full border border-white"
-                          />
-                          <span className="ml-2 text-white">{team.name}</span>
-                        </div>
-                      </AnimatedTooltip>
+                      />
                     ))}
                   </div>
-                  <p><strong>Time:</strong> {new Date(event.time).toLocaleString()}</p>
-                  <p><strong>Location:</strong> {event.location}</p>
+                  <p>
+                    <strong>Time:</strong>{" "}
+                    {new Date(event.time).toLocaleString()}
+                  </p>
+                  <p>
+                    <strong>Location:</strong> {event.location}
+                  </p>
                 </div>
               </CardSpotlight>
             ))

@@ -17,12 +17,10 @@ interface TooltipItem {
 
 interface AnimatedTooltipProps {
   items: TooltipItem[];
-  children: React.ReactNode; // Add this prop
 }
 
 export const AnimatedTooltip: React.FC<AnimatedTooltipProps> = ({
   items,
-  children,
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const springConfig = { stiffness: 100, damping: 5 };
@@ -45,10 +43,9 @@ export const AnimatedTooltip: React.FC<AnimatedTooltipProps> = ({
 
   return (
     <div onMouseMove={handleMouseMove} className="relative inline-block">
-      {children} {/* Render children here */}
       {items.map((item) => (
         <div
-          className="-mr-4 relative group"
+          className="relative group mx-4" // Adjusted spacing between items
           key={item.id}
           onMouseEnter={() => setHoveredIndex(item.id)}
           onMouseLeave={() => setHoveredIndex(null)}
